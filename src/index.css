@@ -17,7 +17,6 @@ body {
 #root {
   width: 100%;
   overflow-x: hidden;
-  max-width: 1600px;
   min-height: 100svh;
   margin: 0 auto;
   background: #fff;
@@ -25,10 +24,68 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.97); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.25s ease-out;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-slideInRight {
+  animation: slideInRight 0.3s ease-out forwards;
+}
+
+.animate-slideInLeft {
+  animation: slideInLeft 0.3s ease-out forwards;
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-slideOutRight {
+  animation: slideOutRight 0.3s ease-in-out forwards;
+}
+
+.animate-slideOutLeft {
+  animation: slideOutLeft 0.3s ease-in-out forwards;
 }
