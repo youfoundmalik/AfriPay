@@ -82,7 +82,7 @@ const TransactionsPage = () => {
                   value={params.query}
                   placeholder='Search transactions'
                 />
-                <div className='md:min-w-[100px] flex-1'>
+                <div className='md:min-w-[120px] flex-1'>
                   <Select onChange={(e) => setParams((p) => ({ ...p, type: e.target.value }))} value={params.type}>
                     <option value=''>Show all</option>
                     {TRANSACTION_TYPES.map(({ key, label }) => (

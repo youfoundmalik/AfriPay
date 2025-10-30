@@ -15,7 +15,9 @@ const Select: React.FC<IProps> = ({ startIcon, containerClass, children, classNa
       )}
     >
       {startIcon}
-      <select className={clsx("flex-1 h-full outline-0 ring-0 text-sm cursor-pointer", className)} {...r}>
+      <select className={clsx("flex-1 h-full outline-0 ring-0 text-sm cursor-pointer", className,{
+        "text-gray-500":!r.value
+      })} {...r}>
         {children}
       </select>
     </div>
