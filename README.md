@@ -1,4 +1,4 @@
-### AfriPay
+## AfriPay
 
 AfriPay is a simple finance tracker built with React, TypeScript, and Vite. It allows you to log and review your personal transactions (credits and debits), view running balances, and export data with ease. All transaction data is handled on the client side and is saved in the browser, so you don't need any backend to get started.
 
