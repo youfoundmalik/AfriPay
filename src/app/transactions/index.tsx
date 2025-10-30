@@ -5,20 +5,30 @@ import { BiDownload } from "react-icons/bi";
 import { IoAddOutline } from "react-icons/io5";
 import { IoMdTrendingDown, IoMdTrendingUp } from "react-icons/io";
 
-import Select from "../../components/inputs/Select";
-import TextInput from "../../components/inputs/TextInput";
+import Select from "../../ui/Select";
+import TextInput from "../../ui/TextInput";
 import { useTransactions } from "../../hooks/useTransactions";
 import TableContainer from "../../components/tables/TableContainer";
 import TransactionsTable from "../../components/tables/TransactionsTable";
 import AddTransactionModal from "../../components/modals/AddTransactionModal";
 import TransactionSummaryCard from "../../components/pages/transactions/SummaryCard";
+import { TRANSACTION_TYPES } from "../../utils/constant";
 
 const TransactionsPage = () => {
-  const { totalCreditAmount, totalDebitAmount, netBalance, pageData, dataCount, params, setParams, loading, exportToExcel } = useTransactions();
   const [isOpen, setIsOpen] = useState(false);
+  const { totalCreditAmount, totalDebitAmount, netBalance, pageData, dataCount, params, setParams, loading, exportToExcel, error, setError } =
+    useTransactions();
 
   return (
     <>
+      {error && setError && (
+        <div className='w-full bg-red-100 text-red-700 px-4 py-2 flex items-center justify-between mb-2 text-sm rounded'>
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className='text-lg font-bold leading-none px-2 hover:opacity-70'>
+            &times;
+          </button>
+        </div>
+      )}
       <div className='flex-1 flex flex-col gap-8'>
         <div className='w-full flex items-center justify-between gap-10'>
           <p className='text-2xl font-medium w-fit'>Transactions</p>
@@ -69,12 +79,17 @@ const TransactionsPage = () => {
                   containerClass='bg-gray-50 min-w-full md:min-w-[250px] Md:max-w-[250px]'
                   startIcon={<CiSearch className='min-w-5 min-h-5 text-gray-600 mr-1' />}
                   onChange={(e) => setParams((p) => ({ ...p, query: e.target.value }))}
+                  value={params.query}
+                  placeholder='Search transactions'
                 />
-                <div className='md:min-w-[100px] flex-1' >
-                  <Select onChange={(e) => setParams((p) => ({ ...p, type: e.target.value }))}>
+                <div className='md:min-w-[100px] flex-1'>
+                  <Select onChange={(e) => setParams((p) => ({ ...p, type: e.target.value }))} value={params.type}>
                     <option value=''>Show all</option>
-                    <option value='credit'>Credits</option>
-                    <option value='debit'>Debits</option>
+                    {TRANSACTION_TYPES.map(({ key, label }) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
                   </Select>
                 </div>
 

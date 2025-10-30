@@ -37,4 +37,6 @@ export type TransactionsContextValue = {
   loading: boolean;
   fetchTransactions: () => Promise<TransactionsFetchResult>;
   exportToExcel: () => Promise<void>;
+  error?: string | null;
+  setError?: Dispatch<SetStateAction<string | null>>;
 };

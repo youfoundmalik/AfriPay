@@ -2,7 +2,8 @@ import { v4 as uuidv4 } from "uuid";
 
 import ModalBase from ".";
 import { useTransactions } from "../../hooks/useTransactions";
-import AddTransactionForm, { type AddTransactionFormData } from "../forms/AddTransactionForm";
+import AddTransactionForm from "../forms/AddTransactionForm";
+import type { TransactionFormData } from "../../schemas/transactionSchema";
 
 interface MProps {
   isOpen: boolean;
@@ -11,7 +12,7 @@ interface MProps {
 const AddTransactionModal: React.FC<MProps> = ({ isOpen, onClose }) => {
   const { addTransaction } = useTransactions();
 
-  const handleSubmit = async (v: AddTransactionFormData) => {
+  const handleSubmit = async (v: TransactionFormData) => {
     const { amount, description, type } = v;
 
     // Generate today's date

@@ -1,30 +1,14 @@
-"use client";
-
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+import { TransactionSchema } from "../../schemas/transactionSchema";
+import type { TransactionFormData } from "../../schemas/transactionSchema";
 
-import Select from "../inputs/Select";
-import TextArea from "../inputs/TextArea";
-import TextInput from "../inputs/TextInput";
-
-// Validation schema
-const AddTransactionSchema = Yup.object().shape({
-  description: Yup.string().required("Description is required"),
-  amount: Yup.number()
-    .transform((_, originalValue) => {
-      const cleaned = String(originalValue).replace(/,/g, "");
-      return Number(cleaned);
-    })
-    .typeError("Amount must be a number")
-    .positive("Amount must be greater than zero")
-    .required("Amount is required"),
-  type: Yup.string().required("Type is required").oneOf(["credit", "debit"], "Invalid type"),
-});
-
-export type AddTransactionFormData = Yup.InferType<typeof AddTransactionSchema>;
+import Select from "../../ui/Select";
+import TextArea from "../../ui/TextArea";
+import TextInput from "../../ui/TextInput";
+import { TRANSACTION_TYPES } from "../../utils/constant";
 
 interface Props {
-  onSubmit: (v: AddTransactionFormData) => Promise<void>;
+  onSubmit: (v: TransactionFormData) => Promise<void>;
   isLoading?: boolean;
 }
 
@@ -36,9 +20,9 @@ const AddTransactionForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
         amount: "",
         type: "",
       }}
-      validationSchema={AddTransactionSchema}
+      validationSchema={TransactionSchema}
       onSubmit={async (values, { resetForm }) => {
-        const formattedValues: AddTransactionFormData = {
+        const formattedValues: TransactionFormData = {
           ...values,
           amount: Number(values.amount.toString().replace(/,/g, "")), // convert to number
         };
@@ -87,8 +71,11 @@ const AddTransactionForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
                   <label className='text-xs text-gray-800'>Type</label>
                   <Field name='type' as={Select} containerClass='h-12'>
                     <option value=''>Select Type</option>
-                    <option value='credit'>Credit</option>
-                    <option value='debit'>Debit</option>
+                    {TRANSACTION_TYPES.map(({ key, label }) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
                   </Field>
                   {touched.type && errors.type && <p className='text-xs text-red-500'>{errors.type}</p>}
                 </div>

@@ -3,6 +3,8 @@ import { saveAs } from "file-saver";
 import ExcelJS from "exceljs";
 import type { TransactionData, TransactionsContextValue, TransactionsFetchResult, TransactionsQueryParams } from "../types/transactions";
 import { systemTransactions } from "../utils/mock";
+import { DEFAULT_PAGE_SIZE } from "../utils/constant";
+import { formatCurrency } from "../utils/functions";
 
 const LOCAL_STORAGE_KEY = "AfriPay_user_transactions";
 
@@ -12,9 +14,10 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [userTransactions, setUserTransactions] = useState<TransactionData[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null); // for surfacing user-facing errors
   const [params, setParams] = useState<TransactionsQueryParams>({
     page: 1,
-    pageSize: 15,
+    pageSize: DEFAULT_PAGE_SIZE,
     type: "",
     query: "",
   });
@@ -29,8 +32,8 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
       }
     } catch {
       console.warn("Failed to load transactions from storage");
+      setError("Couldn't load transactions from your browser. Try refreshing or clearing storage.");
     } finally {
-      // Flag to indicate initial load is complete
       setIsLoaded(true);
     }
   }, []);
@@ -42,6 +45,7 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(userTransactions));
     } catch {
       console.warn("Failed to save transactions to storage");
+      setError("Not enough space to save transactions. Try clearing browser storage.");
     }
   }, [userTransactions, isLoaded]);
 
@@ -56,12 +60,11 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
         try {
           localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updated));
         } catch {
-          console.warn("Could not persist transaction");
+          console.warn("Failed to save transaction to storage");
+          setError("Couldn't save your new transaction. Your browser storage may be full.");
         }
-
         return updated;
       });
-
       setLoading(false);
     }, 800);
   }, []);
@@ -155,7 +158,7 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
         worksheet.addRow({
           tran_id: t.tran_id,
           description: t.description,
-          amount: t.amount.toLocaleString(),
+          amount: formatCurrency(t.amount).replace("₦ ", ""),
           type: t.type,
           date: t.date,
         });
@@ -171,15 +174,17 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
       });
 
       saveAs(blob, `AfriPay_Transactions_${new Date().toISOString().split("T")[0]}.xlsx`);
-    } catch (err) {
-      console.error("Failed to export Excel file", err);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
+      console.warn("Could not persist transaction");
+      setError("Export failed. Try again or check your browser settings.");
     } finally {
       setLoading(false);
     }
   }, [filtered]);
 
   // Provide everything to the rest of the app
-  const value = useMemo<TransactionsContextValue>(
+  const value = useMemo<TransactionsContextValue & { error: string | null; setError: typeof setError }>(
     () => ({
       transactions,
       addTransaction,
@@ -194,8 +199,24 @@ export const TransactionsProvider = ({ children }: { children: ReactNode }) => {
       loading,
       fetchTransactions,
       exportToExcel,
+      error,
+      setError,
     }),
-    [transactions, addTransaction, userTransactions, params, setParams, pageData, dataCount, totals, loading, fetchTransactions, exportToExcel]
+    [
+      transactions,
+      addTransaction,
+      userTransactions,
+      params,
+      setParams,
+      pageData,
+      dataCount,
+      totals,
+      loading,
+      fetchTransactions,
+      exportToExcel,
+      error,
+      setError,
+    ]
   );
 
   return <TransactionsContext.Provider value={value}>{children}</TransactionsContext.Provider>;
