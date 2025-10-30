@@ -56,7 +56,7 @@ const TransactionsPage = () => {
                 <div className='w-12 h-12 border-4 border-green-200 border-t-green-500 rounded-full animate-spin' />
               </div>
             )}
-            <div className='sorting w-full flex items-end gap-10 justify-between'>
+            <div className='sorting w-full flex flex-col md:flex-row md:items-end gap-5 md:gap-10 md:justify-between'>
               <div className='flex items-center gap-2'>
                 <p>Transactions</p>
                 <div className='min-w-8 min-h-8 border rounded-lg border-gray-100 flex items-center justify-center'>
@@ -64,17 +64,20 @@ const TransactionsPage = () => {
                 </div>
               </div>
 
-              <div className='flex items-center justify-end gap-3'>
+              <div className='flex flex-wrap md:flex-nowrap items-center justify-end gap-3'>
                 <TextInput
-                  containerClass='bg-gray-50 min-w-[250px] max-w-[250px]'
+                  containerClass='bg-gray-50 min-w-full md:min-w-[250px] Md:max-w-[250px]'
                   startIcon={<CiSearch className='min-w-5 min-h-5 text-gray-600 mr-1' />}
                   onChange={(e) => setParams((p) => ({ ...p, query: e.target.value }))}
                 />
-                <Select className='min-w-[100px]' onChange={(e) => setParams((p) => ({ ...p, type: e.target.value }))}>
-                  <option value=''>Show all</option>
-                  <option value='credit'>Credits</option>
-                  <option value='debit'>Debits</option>
-                </Select>
+                <div className='md:min-w-[100px] flex-1' >
+                  <Select onChange={(e) => setParams((p) => ({ ...p, type: e.target.value }))}>
+                    <option value=''>Show all</option>
+                    <option value='credit'>Credits</option>
+                    <option value='debit'>Debits</option>
+                  </Select>
+                </div>
+
                 <button
                   onClick={exportToExcel}
                   disabled={loading}

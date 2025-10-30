@@ -66,7 +66,7 @@ const AddTransactionForm: React.FC<Props> = ({ onSubmit, isLoading }) => {
               </div>
 
               {/* Amount and Type */}
-              <div className='w-full flex gap-2'>
+              <div className='w-full flex flex-col md:flex-row gap-4 md:gap-2'>
                 <div className='flex-1 flex flex-col gap-1'>
                   <label className='text-xs text-gray-800'>Amount</label>
                   <Field name='amount'>

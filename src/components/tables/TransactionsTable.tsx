@@ -45,7 +45,7 @@ const TransactionsTable: React.FC<TProps> = ({ data }) => {
               className="border-b border-gray-100 last-of-type:border-b-0"
             >
               <Td className="truncate">{item?.tran_id}</Td>
-              <Td className="px-10">{item?.description}</Td>
+              <Td className="md:px-10 min-w-[400px]">{item?.description}</Td>
 
               {/* Always format the amount nicely with commas */}
               <Td className="min-w-fit text-nowrap">
@@ -54,7 +54,7 @@ const TransactionsTable: React.FC<TProps> = ({ data }) => {
 
               {/* Color-code the transaction type for readability */}
               <Td
-                className={clsx("px-10 capitalize", {
+                className={clsx("md:px-10 capitalize", {
                   "text-green-700": item?.type === "credit",
                   "text-red-700": item?.type === "debit",
                 })}

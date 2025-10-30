@@ -12,7 +12,7 @@ const DashboardLayout = () => {
     <div className='w-full h-svh flex'>
       <aside
         className={clsx(
-          " h-svh border-r bg-white z-10 transition-all duration-600 ease-in-out border-gray-100 sticky left-0 top-0 overflow-x-hidden",
+          " h-svh border-r bg-white hidden md:block z-10 transition-all duration-600 ease-in-out border-gray-100 sticky left-0 top-0 overflow-x-hidden",
           {
             "min-w-16": isCollapsed,
             "min-w-[250px]": !isCollapsed,
@@ -62,10 +62,15 @@ const DashboardLayout = () => {
         </div>
       </aside>
       <div className='flex-1 relative h-svh overflow-y-auto flex flex-col'>
-        <header className='h-20 bg-white z-10 sticky top-0 right-0 border-b border-gray-100 p-4 w-full flex items-center justify-between box-border'>
-          <button onClick={toggleSidebar} className='p-0 m-0 border-0 bg-transparent cursor-pointer'>
+        <header className='min-h-20 bg-white z-10 sticky top-0 right-0 border-b border-gray-100 p-4 w-full flex items-center justify-between box-border'>
+          <button onClick={toggleSidebar} className='p-0 m-0 hidden md:block border-0 bg-transparent cursor-pointer'>
             {isCollapsed ? <RiSidebarUnfoldLine className='w-6 h-6 text-gray-600' /> : <RiSidebarFoldLine className='w-6 h-6 text-gray-600' />}
           </button>
+          <img
+            alt='AfriPay'
+            src={"/src/assets/logo.svg"}
+            className={clsx("absolute min-w-[128px] md:hidden transition-all duration-600 ease-in-out")}
+          />
         </header>
         <main className='flex-1 box-border px-5 py-10 flex flex-col'>
           <Outlet />
